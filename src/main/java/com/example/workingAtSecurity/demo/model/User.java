@@ -1,5 +1,7 @@
 package com.example.workingAtSecurity.demo.model;
 
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.example.workingAtSecurity.demo.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,18 +31,13 @@ public class User implements UserDetails {
     private String email;
     @Column(name = "password", length = 1000)
     private String password;
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();
+    private Role role;
+
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
-                .collect(Collectors.toSet());
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
 

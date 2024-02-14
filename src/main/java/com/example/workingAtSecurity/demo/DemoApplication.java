@@ -24,7 +24,7 @@ public class DemoApplication implements CommandLineRunner {
 	}
 
 	public void run(String...args){
-		User adminAccount = userRepository.findByRoles(Role.ROLE_ADMIN);
+		User adminAccount = userRepository.findByRole(Role.ROLE_ADMIN);
 		if(null == adminAccount){
 			User user = new User();
 
@@ -32,7 +32,7 @@ public class DemoApplication implements CommandLineRunner {
 			user.setEmail("admin@gmail.com");
 			user.setFirstName("admin");
 			user.setLastName("admin");
-			user.setRoles(Collections.singleton(Role.ROLE_ADMIN));
+			user.setRole(Role.ROLE_ADMIN);
 			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
 			userRepository.save(user);
 

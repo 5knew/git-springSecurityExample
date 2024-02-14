@@ -1,6 +1,6 @@
 package com.example.workingAtSecurity.demo.services.impl;
 
-import com.example.workingAtSecurity.demo.dto.JwtAuthentificationResponse;
+import com.example.workingAtSecurity.demo.dto.JwtAuthenticationResponse;
 import com.example.workingAtSecurity.demo.dto.RefreshTokenRequest;
 import com.example.workingAtSecurity.demo.dto.SignInRequest;
 import com.example.workingAtSecurity.demo.dto.SignUpRequest;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,12 +32,12 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         user.setEmail(signUpRequest.getEmail());
         user.setFirstName(signUpRequest.getFirstName());
         user.setLastName(signUpRequest.getLastName());
-        user.setRoles(Collections.singleton(Role.ROLE_USER));
+        user.setRole(Role.ROLE_USER);
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 
         return userRepository.save(user);
     }
-    public JwtAuthentificationResponse signin(SignInRequest signInRequest) throws IllegalArgumentException{
+    public JwtAuthenticationResponse signin(SignInRequest signInRequest) throws IllegalArgumentException{
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getEmail(),
                 signInRequest.getPassword()));
 
@@ -47,25 +46,25 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         var jwt = jwtService.generateToken(user);
 
         var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
-        JwtAuthentificationResponse jwtAuthentificationResponse = new JwtAuthentificationResponse();
+        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
 
-        jwtAuthentificationResponse.setToken(jwt);
-        jwtAuthentificationResponse.setRefreshToken(refreshToken);
-        return jwtAuthentificationResponse;
+        jwtAuthenticationResponse.setToken(jwt);
+        jwtAuthenticationResponse.setRefreshToken(refreshToken);
+        return jwtAuthenticationResponse;
 
     }
 
-    public JwtAuthentificationResponse refreshToken(RefreshTokenRequest refreshTokenRequest){
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest){
         String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
         User user = userRepository.findByEmail(userEmail);
         if(jwtService.isTokenValid(refreshTokenRequest.getToken(), user)){
             var jwt = jwtService.generateToken(user);
 
-            JwtAuthentificationResponse jwtAuthentificationResponse = new JwtAuthentificationResponse();
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
 
-            jwtAuthentificationResponse.setToken(jwt);
-            jwtAuthentificationResponse.setRefreshToken(refreshTokenRequest.getToken());
-            return jwtAuthentificationResponse;
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
+            return jwtAuthenticationResponse;
 
 
 

@@ -1,13 +1,12 @@
 package com.example.workingAtSecurity.demo.controller;
 
-import com.example.workingAtSecurity.demo.dto.JwtAuthentificationResponse;
+import com.example.workingAtSecurity.demo.dto.JwtAuthenticationResponse;
 import com.example.workingAtSecurity.demo.dto.RefreshTokenRequest;
 import com.example.workingAtSecurity.demo.dto.SignInRequest;
 import com.example.workingAtSecurity.demo.dto.SignUpRequest;
 import com.example.workingAtSecurity.demo.model.User;
 import com.example.workingAtSecurity.demo.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,12 +26,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthentificationResponse> signin(@RequestBody SignInRequest signInRequest){
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest signInRequest){
         return ResponseEntity.ok(authenticationService.signin(signInRequest));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JwtAuthentificationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
+    public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
         return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
     }
 }
